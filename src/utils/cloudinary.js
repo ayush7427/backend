@@ -3,11 +3,7 @@ import { v2 as cloudinary } from "cloudinary"
 // https://nodejs.org/api/fs.html#fspromisesunlinkpath
 import fs from "fs"
 
-// cloudinary.config({
-//     cloud_name: 'dje66uhur',
-//     api_key: '585169823475121',
-//     api_secret: "V-oWiIj8ac367sjuE0Wce8F7Kh0"
-// });
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
