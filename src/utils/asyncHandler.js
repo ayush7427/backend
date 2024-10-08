@@ -1,14 +1,28 @@
 const asyncHandler = (fxn) =>
-    async (err, req, res, next) => {
+    async (req, res, next) => {
         try {
-            await fxn(err, req, res, next)
+            return await fxn(req, res, next)
         } catch (error) {
-            res.status(err.code || 500).json({
+            res.status(error.statusCode || 500).json({
                 success: false,
-                message: err.message
+                message: error.message || "Server Error"
             })
 
         }
     }
 
 export { asyncHandler }
+
+
+// const asyncHandler = (fxn) =>
+//     async (req, res, next) => {
+//         try {
+//             await fxn(req, res, next)
+//         } catch (error) {
+//             res.status(error.statusCode || 500).json({
+//                 success: false,
+//                 message: error.message || "Server Error"
+//             });
+//         }
+//     }
+// export { asyncHandler }
