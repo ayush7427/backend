@@ -23,12 +23,28 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     // user validation
-    if (
-        [fullName, email, username, password].some((field) => field?.trim() === "")
+    if ([fullName, email, username, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
 
+    // email validation
+    const regexExpression = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
+    if (!regexExpression.test(email)) {
+        throw new ApiError(400, "Invalid email format.")
+    }
+
+    // password validation
+    const passwordRegexExpression = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
+    if (!passwordRegexExpression.test(password)) {
+        throw new ApiError(400, "Password must be at least 8 characters long, containing at least 1 uppercase letter, 1 lowercase letter, 1 number, and can include special characters.")
+    }
+
+
+    //  fullname length must be 8 digit or greater then 8 digit
+    if (!(fullName.length >= 8)) {
+        throw new ApiError(400, "Name must be at least 8 characters long.")
+    }
 
     //  check for existed user
     const existedUser = await User.findOne({
