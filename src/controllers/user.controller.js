@@ -8,15 +8,19 @@ import { ApiResponse } from "../utils/apiResponse.js";
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId)
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
+        const accessToken = await user.generateAccessToken()
+        const refreshToken = await user.generateRefreshToken()
+        // console.log("AT: ", accessToken);
 
         user.refreshToken = refreshToken
+        // console.log("user:", user);
         await user.save({ validateBeforeSave: false })
 
         return { accessToken, refreshToken }
+
+
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating refresh and access token")
+        throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
 
@@ -135,7 +139,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body
 
     // username or email validation
-    if (!username || !email) {
+    if (!(username || email)) {
         throw new ApiError(404, "username or email must required")
     }
 
@@ -163,8 +167,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     // send cookies
     const options = {
-        httpOnly: true,
-        secure: true
+        httpOnly: true
     }
 
     return res
@@ -188,8 +191,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     )
 
     const options = {
-        httpOnly: true,
-        secure: true
+        httpOnly: true
     }
 
     return res.status(200)

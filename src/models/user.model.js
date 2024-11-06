@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 
 dotenv.config()
 
+
 const userSchema = new Schema({
 
     username: {
